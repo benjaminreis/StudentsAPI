@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="difi-sikker-digital-post-klient" Version="2.1.0" />
+    <PackageReference Include="Npgsql" Version="4.0.6" />
   </ItemGroup>
 
 </Project>

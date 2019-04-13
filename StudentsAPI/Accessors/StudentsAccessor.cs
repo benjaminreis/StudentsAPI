@@ -1,18 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Npgsql;
+
+//documentation:  https://www.npgsql.org/doc/index.html
 
 namespace StudentsAPI.Accessors
 {
     // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
-    public class StudentsAccessor
+    internal class StudentsAccessor
     {
         private readonly RequestDelegate _next;
 
-        public StudentsAccessor(RequestDelegate next)
+        private string _conn = @"Provider = PostgreSQL OLE DB Provider;Data Source = myServerAddress;
+        location=myDataBase;User ID = myUsername; password=myPassword;timeout=1000;";
+
+        internal StudentsAccessor(RequestDelegate next)
         {
             _next = next;
         }
@@ -22,14 +29,54 @@ namespace StudentsAPI.Accessors
 
             return _next(httpContext);
         }
-    }
 
-    // Extension method used to add the middleware to the HTTP request pipeline.
-    public static class StudentsAccessorExtensions
-    {
-        public static IApplicationBuilder UseMiddlewareClassTemplate(this IApplicationBuilder builder)
+        internal List<Models.StudentModel> GetAllStudents()
         {
-            return builder.UseMiddleware<StudentsAccessor>();
+            DataTable tmpTable = new DataTable("students");
+
+            List<Models.StudentModel> Students = new List<Models.StudentModel>();
+
+            using (var conn = new NpgsqlConnection(_conn))
+            {
+                NpgsqlDataAdapter adapter = new NpgsqlDataAdapter("SELECT id, firstname, lastname, age, school, major FROM students", conn);
+
+                adapter.Fill(tmpTable);
+
+            }
+
+            //var temp = tmpTable.Rows.ForEach(row => Models.StudentModel(row)).ToList();
+
+
+            foreach (DataRow row in tmpTable.Rows)
+            {
+                Students.Add(new Models.StudentModel(row));
+            }
+
+
+            return Students;
+
         }
+
+        //NpgsqlDataAdapter npDataAdapterSingle = new NpgsqlDataAdapter("SELECT * from \"Weight\" ORDER BY id DESC LIMIT 1", this.npConnection);
+        //DataTable tmpTable = new DataTable("tmpTable");
+        //npDataAdapterSingle.Fill(tmpTable);
+
+        //row = tmpTable.NewRow();
+
+        //foreach (DataColumn col in tmpTable.Columns)
+        //    row[col.ColumnName] = tmpTable.Rows[0][col.ColumnName];
+
+        //tmpTable.Rows.Add(row, 0);
+
+
+
+        // Extension method used to add the middleware to the HTTP request pipeline.
+        //public static class StudentsAccessorExtensions
+        //{
+        //    public static IApplicationBuilder UseMiddlewareClassTemplate(this IApplicationBuilder builder)
+        //    {
+        //        return builder.UseMiddleware<StudentsAccessor>();
+        //    }
+        //}
     }
 }

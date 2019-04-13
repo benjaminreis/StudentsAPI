@@ -10,6 +10,7 @@ namespace StudentsAPI.Controllers
 {
     public class StudentsController : Controller
     {
+
         // GET: /<controller>/
         public IActionResult Index()
         {
