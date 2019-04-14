@@ -8,8 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StudentsAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class StudentsController : Controller
     {
+        internal Managers.StudentsManager StudentsManager = new Managers.StudentsManager();
 
         // GET: /<controller>/
         public IActionResult Index()
@@ -19,9 +22,9 @@ namespace StudentsAPI.Controllers
 
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public JsonResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Json(StudentsManager.GetStudents());
         }
     }
 }
