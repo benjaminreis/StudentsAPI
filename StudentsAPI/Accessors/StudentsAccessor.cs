@@ -17,9 +17,11 @@ namespace StudentsAPI.Accessors
         private readonly RequestDelegate _next;
 
         //TODO BEN move this connection string to the appsettings.json
-        private string _conn = @"Provider = PostgreSQL OLE DB Provider;Data Source = myServerAddress;
-        location=myDataBase;User ID = myUsername; password=myPassword;timeout=1000;";
+        //private string _conn = @"Data Source = myServerAddress;
+        //location=myDataBase;User ID = myUsername; password=myPassword;timeout=1000;";
 
+
+        private string _conn = "Server=localhost;Port=5432;Database=Training;User Id=postgres;Password=password;";
         internal StudentsAccessor(RequestDelegate next)
         {
             _next = next;
