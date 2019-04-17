@@ -18,6 +18,12 @@ namespace StudentsAPI.Managers
             return StudentsAccessor.GetAllStudents();
         }
 
+        internal Models.StudentModel GetStudent(int StudentID)
+        {
+
+            return StudentsAccessor.GetAllStudents().Find(x => x.ID)
+        }
+
 
     }
 }
